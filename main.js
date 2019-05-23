@@ -31,6 +31,69 @@ class IrtransUp extends utils.Adapter {
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
+
+async Connect(a,ip){
+     //uwe
+// Include Nodejs' net module.
+const Net = require('net');
+// The port number and hostname of the server.
+const port = 8765;
+//const host = '192.168.0.82';
+var host = ip;
+
+
+// Create a new TCP client.
+const client = new Net.Socket();
+// Send a connection request to the server.
+client.connect( port, host , function() {
+    // If there is no error, the server has accepted the request and created a new 
+    // socket dedicated to us.
+    
+    a.log.info('TCP connection established with the server. '+ host);
+	a.setStateAsync("info.connection", true);
+     a.setStateAsync("TCPSocket", { val:'TCP connection established with the server.', ack: true });
+    // The client can now send data to the server by writing to its socket.
+    //client.write('Hello, server.');
+});
+
+// The client can also receive data from the server by reading from its socket.
+client.on('data', function(chunk) {
+    a.setStateAsync("TCPSocket", { val: chunk.toString(), ack: true });
+    a.setStateAsync("Command", { val: chunk.toString().split(' ')[2], ack: true });
+    a.setStateAsync("Device", { val: chunk.toString().split(' ')[3], ack: true });
+
+    
+     //this.log.info('Data received from the server: ${chunk.toString().replace("\n",'')}');
+    
+    // Request an end to the connection after the data has been received.
+    client.end();
+});
+
+client.on('end', function(ex) {
+    //log('Requested an end to the TCP connection'+ ex);
+    //setState('javascript.1.TCPSocket','Requested an end to the TCP connection'+ ex);
+a.setStateAsync("info.connection", false);
+});
+
+client.on('close', function(ex) {
+    //log('Close TCP connection'+ ex);
+    //setState('javascript.1.TCPSocket','Close TCP connection'+ ex);
+a.setStateAsync("info.connection", false);
+    client.connect(port, host);
+
+});
+client.on('error', function(ex) {
+    
+     a.log.info('Error TCP connection'+ ex.toString());
+    a.setStateAsync("TCPSocket", { val: 'Error TCP connection'+ ex, ack: true });
+});
+//uwe
+
+}
+
+
+
+
 	async onReady() {
 		// Initialize your adapter here
 
@@ -41,24 +104,46 @@ class IrtransUp extends utils.Adapter {
 		// this.config:
 		this.log.info("config option1: " + this.config.option1);
 		this.log.info("config option2: " + this.config.option2);
+		this.log.info("IP: " + this.config.ip);
 
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/
-		await this.setObjectAsync("testVariable", {
-			type: "state",
-			common: {
-				name: "testVariable",
-				type: "boolean",
-				role: "indicator",
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
-
+		    await this.setObjectAsync('TCPSocket', {
+            type: 'state',
+            common: {
+                name: 'TCPSocket',
+                type: 'string',
+                role: '',
+                read: true,
+                write: true,
+            },
+            native: {},
+});
+    await this.setObjectAsync('Command', {
+            type: 'state',
+            common: {
+                name: 'Command',
+                type: 'string',
+                role: '',
+                read: true,
+                write: true,
+            },
+            native: {},
+});
+    await this.setObjectAsync('Device', {
+            type: 'state',
+            common: {
+                name: 'Device',
+                type: 'string',
+                role: '',
+                read: true,
+                write: true,
+            },
+            native: {},
+});
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");
 
@@ -67,21 +152,23 @@ class IrtransUp extends utils.Adapter {
 		you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
 		*/
 		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync("testVariable", true);
+		//await this.setStateAsync("testVariable", true);
 
 		// same thing, but the value is flagged "ack"
 		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync("testVariable", { val: true, ack: true });
+		//await this.setStateAsync("testVariable", { val: true, ack: true });
 
 		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
+		//await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
 
 		// examples for the checkPassword/checkGroup functions
-		let result = await this.checkPasswordAsync("admin", "iobroker");
-		this.log.info("check user admin pw ioboker: " + result);
+		//let result = await this.checkPasswordAsync("admin", "iobroker");
+		//this.log.info("check user admin pw ioboker: " + result);
 
-		result = await this.checkGroupAsync("admin", "admin");
-		this.log.info("check group user admin group admin: " + result);
+		//result = await this.checkGroupAsync("admin", "admin");
+		//this.log.info("check group user admin group admin: " + result);
+
+		await this.Connect(this,this.config.ip);
 	}
 
 	/**
