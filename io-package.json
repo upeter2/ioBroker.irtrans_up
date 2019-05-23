@@ -1,0 +1,102 @@
+{
+	"common": {
+		"name": "irtrans_up",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "irtrans_up",
+		"titleLang": {
+			"en": "irtrans_up",
+			"de": "irtrans_up",
+			"ru": "irtrans_up",
+			"pt": "irtrans_up",
+			"nl": "irtrans_up",
+			"fr": "irtrans_up",
+			"it": "irtrans_up",
+			"es": "irtrans_up",
+			"pl": "irtrans_up",
+			"zh-cn": "irtrans_up"
+		},
+		"desc": {
+			"en": "irtrans_up",
+			"de": "irtrans_up",
+			"ru": "irtrans_up",
+			"pt": "irtrans_up",
+			"nl": "irtrans_up",
+			"fr": "irtrans_up",
+			"it": "irtrans_up",
+			"es": "irtrans_up",
+			"pl": "irtrans_up",
+			"zh-cn": "irtrans_up"
+		},
+		"authors": [
+			"upeter2 <mrgoto@gmx.de>"
+		],
+		"keywords": [
+			"ioBroker",
+			"template",
+			"Smart Home",
+			"home automation"
+		],
+		"license": "Unlicense",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "irtrans_up.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/upeter2/ioBroker.irtrans_up/master/admin/irtrans_up.png",
+		"readme": "https://github.com/upeter2/ioBroker.irtrans_up/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "iot-systems",
+		"compact": true,
+		"materialize": true,
+		"dependencies": [
+			{
+				"admin": ">=3.0.0"
+			},
+			{
+				"js-controller": ">=1.4.2"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
+}
